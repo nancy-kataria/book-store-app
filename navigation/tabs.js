@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Home } from "../screens/";
 import { Settings } from "../screens/";
 import { icons, COLORS } from "../constants";
+import SavedBooks from "../screens/";
 
 const Tab = createBottomTabNavigator();
 

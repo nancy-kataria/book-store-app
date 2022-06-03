@@ -1,12 +1,13 @@
 import { CurrentRenderContext } from "@react-navigation/native";
 import React from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import { COLORS, FONTS, SIZES, icons, images } from "../constants";
 
-export default function MyAccount() {
+export default function Settings({navigation}) {
   return (
     <View style={{ marginTop: SIZES.padding, alignContent: "center" }}>
-      {/* <Text
+      <View>
+        <Text
         style={{
           ...FONTS.h2,
           paddingLeft: 130,
@@ -19,33 +20,28 @@ export default function MyAccount() {
           flexDirection : 'column'
         }}
       >
-      
         Nancy Kataria
-      </Text> */}
-      <View style={{...FONTS.h2,
-          paddingLeft: 130,
-          color: COLORS.black,
-          paddingTop: 14,
-          paddingBottom: 14,
-          marginBottom: 10,
-          backgroundColor: COLORS.white,
-          alignItems: "center",
-          flexDirection : 'column'}}>
-
-      </View>
-      <Text
-        style={{
-          ...FONTS.h2,
-          paddingLeft: SIZES.padding,
-          color: COLORS.black,
-          paddingTop: 14,
-          paddingBottom: 14,
-          marginBottom: 10,
-          backgroundColor: COLORS.white,
-        }}
-      >
-        Saved Books
       </Text>
+      </View>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('SavedBooks')
+        }
+      >
+        <Text
+          style={{
+            ...FONTS.h2,
+            paddingLeft: SIZES.padding,
+            color: COLORS.black,
+            paddingTop: 14,
+            paddingBottom: 14,
+            marginBottom: 10,
+            backgroundColor: COLORS.white,
+          }}
+        >
+          Saved Books
+        </Text>
+      </TouchableOpacity>
       <Text
         style={{
           ...FONTS.h2,
