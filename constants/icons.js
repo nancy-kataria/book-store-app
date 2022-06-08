@@ -13,9 +13,11 @@ export const bookmark_icon = require("../assets/icons/bookmark_icon.png");
 export const read_icon = require("../assets/icons/read_icon.png");
 export const back_arrow_icon = require("../assets/icons/back_arrow_icon.png");
 export const more_icon = require("../assets/icons/more_icon.png");
+export const bookmarked_icon = require("../assets/icons/bookmark.png");
 
 
 export default {
+    bookmarked_icon,
     card_icon,
     claim_icon,
     dashboard_icon,

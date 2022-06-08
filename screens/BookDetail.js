@@ -8,6 +8,7 @@ import {
     ScrollView,
     Animated
 } from 'react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FONTS, COLORS, SIZES, icons } from "../constants";
 
 const LineDivider = () => {
@@ -21,15 +22,48 @@ const LineDivider = () => {
 const BookDetail = ({ route, navigation }) => {
 
     const [book, setBook] = React.useState(null);
+    const [isBookMarked, setIsBookMarked] = React.useState(false);
 
     const [scrollViewWholeHeight, setScrollViewWholeHeight] = React.useState(1);
     const [scrollViewVisibleHeight, setScrollViewVisibleHeight] = React.useState(0);
 
     const indicator = new Animated.Value(0);
 
+    const saveToBookmark = async (book) =>{
+        const savedBooks = await AsyncStorage.getItem('bookmarked_books');
+        if(isBookMarked){
+            const books = JSON.parse(savedBooks);
+            const newSavedBooks = books.filter(item => item.id !== book.id);
+            await AsyncStorage.setItem('bookmarked_books', JSON.stringify(newSavedBooks));
+            setIsBookMarked(false);
+        }else{
+            if(savedBooks !== null){
+                const books = JSON.parse(savedBooks);
+                books.push(book);
+                await AsyncStorage.setItem('bookmarked_books', JSON.stringify(books));
+            }else{
+                await AsyncStorage.setItem('bookmarked_books', JSON.stringify([book]));
+            }
+            setIsBookMarked(true);
+        }
+        
+    }
+
+    async function checkIfBookmarked(currentBook){
+        try {
+          const value = await AsyncStorage.getItem('bookmarked_books');
+          if(value !== null) {
+            const books = JSON.parse(value);
+            setIsBookMarked(books.some(book => book.id === currentBook.id));
+          }
+        } catch(e) {
+        }
+      }
+
     React.useEffect(() => {
         let { book } = route.params;
         setBook(book)
+        checkIfBookmarked(book);
     }, [book])
 
     function renderBookInfoSection() {
@@ -202,7 +236,7 @@ const BookDetail = ({ route, navigation }) => {
         )
     }
 
-    function renderBottomButton() {
+    function renderBottomButton(book) {
         return (
             <View style={{ flex: 1, flexDirection: 'row' }}>
                 {/* Bookmark */}
@@ -216,15 +250,16 @@ const BookDetail = ({ route, navigation }) => {
                         alignItems: 'center',
                         justifyContent: 'center'
                     }}
-                    onPress={() => console.log("Bookmark")}
+                    onPress={() => saveToBookmark(book)}
                 >
                     <Image
-                        source={icons.bookmark_icon}
+                        source={ isBookMarked? icons.bookmarked_icon : icons.bookmark_icon}
                         resizeMode="contain"
                         style={{
                             width: 25,
                             height: 25,
-                            tintColor: COLORS.lightGray2
+                            tintColor: COLORS.lightGray2,
+                            fill: 'white',
                         }}
                     />
                 </TouchableOpacity>
@@ -263,7 +298,7 @@ const BookDetail = ({ route, navigation }) => {
 
                 {/* Buttons */}
                 <View style={{ height: 70, marginBottom: 30 }}>
-                    {renderBottomButton()}
+                    {renderBottomButton(book)}
                 </View>
             </View>
         )
